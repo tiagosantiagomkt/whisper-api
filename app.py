@@ -3,7 +3,11 @@ import whisper
 import tempfile
 
 app = FastAPI()
-model = whisper.load_model("base")  # pode trocar por "small", "medium", "large" se quiser mais precisão
+
+@app.on_event("startup")
+def load_model():
+    global model
+    model = whisper.load_model("base")
 
 @app.post("/transcribe")
 async def transcribe(file: UploadFile = File(...)):
