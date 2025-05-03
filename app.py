@@ -3,12 +3,13 @@ import whisper
 import tempfile
 
 app = FastAPI()
-model = whisper.load_model("base")
+model = whisper.load_model("base")  # pode trocar por "small", "medium", "large" se quiser mais precisão
 
 @app.post("/transcribe")
 async def transcribe(file: UploadFile = File(...)):
     with tempfile.NamedTemporaryFile(delete=False) as tmp:
         tmp.write(await file.read())
         tmp_path = tmp.name
+
     result = model.transcribe(tmp_path)
     return {"transcription": result["text"]}
